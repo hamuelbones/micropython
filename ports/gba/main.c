@@ -10,10 +10,19 @@
 #include "shared/runtime/gchelper.h"
 #include "shared/runtime/pyexec.h"
 
+#include <tonc.h>
+
 // Allocate memory for the MicroPython GC heap.
 static char heap[4096];
 
 int main(int argc, char **argv) {
+
+    REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
+
+    tte_init_chr4c_default(0, BG_CBB(0) | BG_SBB(31));
+    tte_set_pos(0, 0);
+    //tte_write("Hello World!\n");
+
     // Initialise the MicroPython runtime.
     mp_stack_ctrl_init();
     gc_init(heap, heap + sizeof(heap));

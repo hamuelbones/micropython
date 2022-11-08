@@ -30,6 +30,6 @@ typedef long mp_off_t;
 
 // Define the port's name and hardware.
 #define MICROPY_HW_BOARD_NAME "game-boy-advance"
-#define MICROPY_HW_MCU_NAME   "unknown-cpu"
+#define MICROPY_HW_MCU_NAME   "ARM7TDMI"
 
 #define MP_STATE_PORT MP_STATE_VM
