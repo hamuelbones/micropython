@@ -9,6 +9,7 @@
 #include "py/stackctrl.h"
 #include "shared/runtime/gchelper.h"
 #include "shared/runtime/pyexec.h"
+#include "mphalport.h"
 
 #include <tonc.h>
 
@@ -17,6 +18,7 @@ static char heap[4096];
 
 int main(int argc, char **argv) {
 
+    setup_uart();
     REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
 
     tte_init_chr4c_default(0, BG_CBB(0) | BG_SBB(31));
@@ -42,6 +44,10 @@ void nlr_jump_fail(void *val) {
     for (;;) {
     }
 }
+mp_obj_t mp_builtin_open(size_t n_args, const mp_obj_t *args, mp_map_t *kwargs) {
+    return mp_const_none;
+}
+MP_DEFINE_CONST_FUN_OBJ_KW(mp_builtin_open_obj, 1, mp_builtin_open);
 
 // Do a garbage collection cycle.
 void gc_collect(void) {

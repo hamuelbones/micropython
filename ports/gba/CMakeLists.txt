@@ -24,23 +24,23 @@ include(${MICROPY_DIR}/py/usermod.cmake)
 
 add_executable(${MICROPY_TARGET})
 
-set(MICROPY_QSTRDEFS_PORT
-        )
+#set(MICROPY_QSTRDEFS_PORT
+#        )
 
 set(MICROPY_SOURCE_LIB
+        ${MICROPY_DIR}/shared/runtime/gchelper_generic.c
+        ${MICROPY_DIR}/shared/readline/readline.c
+        ${MICROPY_DIR}/shared/runtime/pyexec.c
+        ${MICROPY_DIR}/shared/libc/printf.c
+        ${MICROPY_DIR}/shared/runtime/stdout_helpers.c
         )
 
-set(MICROPY_SOURCE_DRIVERS
-        )
+#set(MICROPY_SOURCE_DRIVERS
+#        )
 
 set(MICROPY_SOURCE_PORT
         main.c
         mphalport.c
-        ${MICROPY_DIR}/shared/libc/printf.c
-        ${MICROPY_DIR}/shared/runtime/stdout_helpers.c
-        ${MICROPY_DIR}/shared/runtime/gchelper_generic.c
-        ${MICROPY_DIR}/shared/readline/readline.c
-        ${MICROPY_DIR}/shared/runtime/pyexec.c
 
         #${CMAKE_CURRENT_BINARY_DIR}/_frozen_mpy.c
         )
@@ -56,9 +56,6 @@ list(APPEND MICROPY_SOURCE_QSTR
         ${MICROPY_SOURCE_EXTMOD}
         ${MICROPY_SOURCE_USERMOD}
         )
-
-# Define mpy-cross flags
-set(MICROPY_CROSS_FLAGS -march=armv6m)
 
 target_sources(${MICROPY_TARGET} PRIVATE
         ${MICROPY_SOURCE_PY}
@@ -90,9 +87,6 @@ target_compile_definitions(${MICROPY_TARGET} PRIVATE
 #        VERBATIM
 #        )
 
-# Include the main MicroPython cmake rules.
-include(${MICROPY_DIR}/py/mkrules.cmake)
-
 
 gba_add_library_subdirectory(rom tonc)
 set_target_properties(${MICROPY_TARGET} PROPERTIES SUFFIX ".elf")
@@ -100,3 +94,6 @@ target_compile_options(${MICROPY_TARGET} PRIVATE -mthumb -Wall)
 target_link_options(${MICROPY_TARGET} PRIVATE -Wl,--gc-sections)
 target_link_libraries(${MICROPY_TARGET} PRIVATE rom tonc usermod m)
 gba_target_objcopy(${MICROPY_TARGET} FIX_HEADER)
+
+# Include the main MicroPython cmake rules.
+include(${MICROPY_DIR}/py/mkrules.cmake)
