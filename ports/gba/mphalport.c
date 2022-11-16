@@ -1,4 +1,5 @@
 #include "py/mpconfig.h"
+#include "py/stream.h"
 #include <tonc.h>
 
 // UART settings
@@ -28,7 +29,7 @@ char g_rcv_buffer[UART_RCV_BUFFER_SIZE];
 void init_uart(u16 uart) {
     REG_RCNT = 0;
 
-    REG_SIOCNT = uart | SIO_MODE_UART | SIO_LENGTH_8 |  SIO_SEND_ENABLE | SIO_RECV_ENABLE;
+    REG_SIOCNT = uart | SIO_MODE_UART | SIO_LENGTH_8 | SIO_SEND_ENABLE | SIO_RECV_ENABLE;
     REG_SIOCNT |= SIO_USE_FIFO;
 }
 
@@ -77,3 +78,11 @@ void mp_hal_stdout_tx_strn(const char *str, mp_uint_t len) {
     }
 }
 
+uintptr_t mp_hal_stdio_poll(uintptr_t poll_flags) {
+    uintptr_t ret = 0;
+    if ((poll_flags & MP_STREAM_POLL_RD) &&
+        !(REG_SIOCNT & SIO_RECV_DATA)) {
+        ret |= MP_STREAM_POLL_RD;
+    }
+    return ret;
+}

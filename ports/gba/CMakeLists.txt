@@ -6,7 +6,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Set main target and component locations
-set(MICROPY_TARGET firmware)
+set(MICROPY_TARGET mpa)
 get_filename_component(MICROPY_DIR "../.." ABSOLUTE)
 
 # Set the location of this port's directory.
@@ -28,11 +28,14 @@ add_executable(${MICROPY_TARGET})
 #        )
 
 set(MICROPY_SOURCE_LIB
-        ${MICROPY_DIR}/shared/runtime/gchelper_generic.c
         ${MICROPY_DIR}/shared/readline/readline.c
+        ${MICROPY_DIR}/shared/runtime/gchelper_generic.c
+        ${MICROPY_DIR}/shared/runtime/interrupt_char.c
+        ${MICROPY_DIR}/shared/runtime/mpirq.c
         ${MICROPY_DIR}/shared/runtime/pyexec.c
-        ${MICROPY_DIR}/shared/libc/printf.c
         ${MICROPY_DIR}/shared/runtime/stdout_helpers.c
+        ${MICROPY_DIR}/shared/runtime/sys_stdio_mphal.c
+        ${MICROPY_DIR}/shared/timeutils/timeutils.c
         )
 
 #set(MICROPY_SOURCE_DRIVERS
@@ -47,8 +50,10 @@ set(MICROPY_SOURCE_PORT
 
 set(MICROPY_SOURCE_QSTR
         ${MICROPY_SOURCE_PY}
+        ${MICROPY_SOURCE_LIB}
         ${MICROPY_DIR}/shared/readline/readline.c
-        ${MICROPY_DIR}/shared/runtime/pyexec.c
+        ${MICROPY_DIR}/shared/runtime/mpirq.c
+        ${MICROPY_DIR}/shared/runtime/sys_stdio_mphal.c
         )
 
 # Add qstr sources for extmod and usermod, in case they are modified by components above.
